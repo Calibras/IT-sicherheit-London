@@ -1,5 +1,5 @@
 <?php
-  include "dbConnection.php";
+  include "dbConnectionWebshop.php";
 
   session_reset();
   session_start();
