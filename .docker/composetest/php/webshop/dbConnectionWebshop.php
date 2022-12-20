@@ -15,7 +15,7 @@
         function search($productname){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
              // select query
-             $sql = 'SELECT First_Name, Last_Name, DoB FROM user_info WHERE First_Name = "' . $productname. '";';
+             $sql = 'SELECT Product_name, Price, Quantity FROM products WHERE product_name LIKE "%' . $productname. '%"';
              if ($result = $conn->query($sql)) {
                 $products[] = [];
                 while ($data = $result->fetch_assoc()) {
@@ -30,7 +30,8 @@
         */
         function saveSearch($productname){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
-            $sql = 'SELECT * FROM user_info WHERE First_Name = ?';
+            $sql = 'SELECT Product_name, Price, Quantity FROM products WHERE product_name LIKE %?%';
+           // $sql = 'SELECT * FROM user_info WHERE First_Name = ?';
             $stmt = $conn->prepare($sql); 
             $stmt->bind_param("i", $productname);
             $stmt->execute();
@@ -40,6 +41,16 @@
             $return[] = $result;
 
             return $return;
+        }
+
+        /**
+         * neues Product einfügen
+         */
+        function addItem($productname, $productprice) {
+            $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
+            $sql = 'INSERT INTO products(Product_name, Price) VALUES("' . $productname . '",' .$productprice.')';
+            $conn->query($sql);
+
         }
     }
 ?>

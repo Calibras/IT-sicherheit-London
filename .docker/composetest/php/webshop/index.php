@@ -1,22 +1,31 @@
 <?php
   include "dbConnectionWebshop.php";
 
-  session_reset();
+  
   session_start();
 
 
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-     $productname = $_POST["searchProduct"];
-     $connector = new Connector();
+
+    $connector = new Connector();
+
+    if(isset($_REQUEST['addItem'])) {
+      $productname = $_POST["productName"]; 
+      $productprice = $_POST["productPrice"];
+      $_SESSION["addproduct"] = $connector->addItem($productname, $productprice);
+    }
+    else {
+    $productname = $_POST["searchProduct"];
      
      $_SESSION["searchProduct"] = $productname;
-     //$_SESSION["msg"] = $connector->search($id);
-     $_SESSION["products"] = $connector->Search($productname);
-     
+     $_SESSION["products"] = $connector->search($productname);
+     //$_SESSION["products"] = $connector->saveSearch($productname);
+    }
+
      header("Location: Views/webshop.php");
      exit();
+    
   }else{
-    session_destroy();
     header("Location: Views/webshop.php");
     exit();
     //echo file_get_contents("Views/indexView.php");
