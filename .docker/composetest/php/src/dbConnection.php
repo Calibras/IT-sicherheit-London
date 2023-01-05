@@ -35,7 +35,7 @@
         function searchForProduct($productname){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
              // select query
-             $sql = 'SELECT First_Name, Last_Name, DoB FROM user_info WHERE First_Name = "' . $productname. '";';
+             $sql = 'SELECT Product_name, Price, Quantity FROM products WHERE product_name LIKE "%' . $productname. '%"';
              if ($result = $conn->query($sql)) {
                 $products[] = [];
                 while ($data = $result->fetch_assoc()) {
@@ -45,6 +45,16 @@
                 return $products;
             }
         }
+
+        /**
+         * neues Product einfügen
+         */
+        function addItem($productname, $productprice) {
+            $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
+            $sql = 'INSERT INTO products(Product_name, Price) VALUES("' . $productname . '",' .$productprice.')';
+            $conn->query($sql);    
+        } 
+
 
         function bulshit($string){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
@@ -76,6 +86,18 @@
                 array_shift($userInfo);
                 return $userInfo;
             }
+        }
+
+        function validateLogin($userName, $password){
+            $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
+            $sql = "SELECT Username, User_Pass FROM user_login WHERE Username = '". $userName. "'";
+            if ($result = $conn->query($sql)) {
+                 $pass = $result->fetch_assoc();
+            }
+            if($pass != NULL){
+                if ($pass["User_Pass"] == $password) return TRUE;}
+            return FALSE;
+            
         }
 
         /** 
