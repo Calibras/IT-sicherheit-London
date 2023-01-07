@@ -13,8 +13,8 @@
     else {
      $productname = $_POST["searchProduct"];
      $_SESSION["searchProduct"] = $productname;
-     //$_SESSION["msg"] = $connector->search($id);
-     $_SESSION["products"] = $connector->searchForProduct($productname);
+     $_SESSION["products"] = $connector->savesearchForProduct($productname);
+     //$_SESSION["products"] = $connector->searchForProduct($productname);
     }
     
      header("Location: Views/webshopView.php");

@@ -46,6 +46,31 @@
             }
         }
 
+        function saveSearchForProduct($productname){
+            $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
+            $sql = 'SELECT Product_name, Price, Quantity FROM products WHERE product_name LIKE ?';
+            //$sql = 'SELECT Product_name, Price, Quantity FROM products WHERE product_name = ?';
+
+         
+            $stmt = $conn->prepare($sql); 
+            $input = "%$productname%";
+            //echo $input;
+            $stmt->bind_param("s", $input);
+            $stmt->execute();
+         
+            $return[] = [];
+            $result = $stmt->get_result();
+            while($data = $result->fetch_assoc()){
+                $return[] = $data;
+            }
+            //Das packen ins array ist dammit, falls mehree Elemente zurückkommen alles klappt
+            
+            
+
+            return $return;
+            
+        }
+
         /**
          * neues Product einfügen
          */
