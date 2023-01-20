@@ -8,13 +8,16 @@
      if(isset($_REQUEST['addItem'])) {
       $productname = $_POST["productName"]; 
       $productprice = $_POST["productPrice"];
-      $_SESSION["addproduct"] = $connector->addItem($productname, $productprice);
+      //$connector->addItem($productname, $productprice);
+      $connector->saveAddItem($productname, $productprice);
+      
     }
-    else {
+    else if(isset($_REQUEST['submit'])){
      $productname = $_POST["searchProduct"];
      $_SESSION["searchProduct"] = $productname;
      $_SESSION["products"] = $connector->savesearchForProduct($productname);
      //$_SESSION["products"] = $connector->searchForProduct($productname);
+     //$_SESSION["products"] = $connector->searchForProductStoredProcedure($productname);
     }
     
      header("Location: Views/webshopView.php");

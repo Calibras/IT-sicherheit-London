@@ -46,13 +46,7 @@ session_start();
         if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_REQUEST['searchProduct'])) {
       
           $connector = new Connector();
-      /*     
-          $url = $_SERVER['REQUEST_URI'];
-          //echo $url;
-          $url_components = parse_url($url);
-          parse_str($url_components['query'], $parameters);
-          $productname = $parameters['searchProduct'];
-      */
+     
           $productname = $_GET["searchProduct"];
           $_SESSION["searchProduct"] = $productname;
           //$_SESSION["products"] = $connector->savesearchForProduct($productname);
@@ -76,10 +70,13 @@ session_start();
     
                 for($i = 0; $i < count($products); $i++){
                     echo "<tr>";
+                    //if(array_key_exists("Product_name",$products[$i]))
                         echo "<td>" . $products[$i]["Product_name"]. "</td>";
+                    //if(array_key_exists("Price",$products[$i]))
                         echo "<td>" . $products[$i]["Price"]. "</td>";
+                    //if(array_key_exists("Quantity",$products[$i]))
                         echo "<td>" . $products[$i]["Quantity"]. "</td>";
-                        echo "</tr>";
+                    echo "</tr>";
                 }
             echo "</table>" ;
             } else echo "Product not found";

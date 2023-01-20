@@ -54,7 +54,6 @@
          
             $stmt = $conn->prepare($sql); 
             $input = "%$productname%";
-            //echo $input;
             $stmt->bind_param("s", $input);
             $stmt->execute();
          
@@ -63,13 +62,30 @@
             while($data = $result->fetch_assoc()){
                 $return[] = $data;
             }
-            //Das packen ins array ist dammit, falls mehree Elemente zurückkommen alles klappt
             
             
-
             return $return;
             
         }
+
+        /**
+         * stored procedure
+         */
+        function searchForProductStoredProcedure($productname){
+            $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
+            // select query
+            $sql = 'CALL SearchProductByName("' . $productname. '")';
+            if ($result = $conn->query($sql)) {
+               $products[] = [];
+               while ($data = $result->fetch_assoc()) {
+                   $products[] = $data;
+               }
+               array_shift($products);
+               return $products;
+            }
+        }
+
+
 
         /**
          * neues Product einfügen
@@ -79,6 +95,14 @@
             $sql = 'INSERT INTO products(Product_name, Price) VALUES("' . $productname . '",' .$productprice.')';
             $conn->query($sql);    
         } 
+
+        function saveAddItem($productname, $productprice) {
+            $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
+            $sql = 'INSERT INTO products(Product_name, Price) VALUES(?,?)';
+            $stmt = $conn->prepare($sql); 
+            $stmt->bind_param("sd", $productname, $productprice);
+            $stmt->execute();
+        }
 
 
         function bulshit($string){

@@ -57,8 +57,11 @@ session_start();
     
                 for($i = 0; $i < count($products); $i++){
                     echo "<tr>";
+                    if(array_key_exists("Product_name",$products[$i]))
                         echo "<td>" . $products[$i]["Product_name"]. "</td>";
+                    if(array_key_exists("Price",$products[$i]))
                         echo "<td>" . $products[$i]["Price"]. "</td>";
+                    if(array_key_exists("Quantity",$products[$i]))
                         echo "<td>" . $products[$i]["Quantity"]. "</td>";
                         echo "</tr>";
                 }
