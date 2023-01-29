@@ -74,6 +74,10 @@
         function searchForProductStoredProcedure($productname){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
             // select query
+             if ($conn->connect_error) {
+                print("Es folgt fehler meldung vom connector : ");
+                die("Connection failed: " . $conn->connect_error);
+            } 
             $sql = 'CALL SearchProductByName("' . $productname. '")';
             if ($result = $conn->query($sql)) {
                $products[] = [];
@@ -104,6 +108,18 @@
             $stmt->execute();
         }
 
+
+        function saveAddItem($productname, $productprice) {
+
+            if ($conn->connect_error) {
+                print("Es folgt fehler meldung vom connector : ");
+                die("Connection failed: " . $conn->connect_error);
+            }
+            $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
+            $sql = 'INSERT INTO products(Product_name, Price) VALUES("' . $productname . '",' .$productprice.')';
+            $conn->query($sql);    
+        } 
+        }
 
         function bulshit($string){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
