@@ -1,5 +1,5 @@
 <?php
-include "../dbConnection.php";
+
 session_start();
 ?>
 <!DOCTYPE html>
@@ -27,11 +27,11 @@ session_start();
 <body>
         
         <br>
-        <h1> Webshop </h1>
+        <h1> Save Shop </h1>
         <br>
         <br>
 
-    <form method="get">
+    <form method="post" action="/saveShop.php">
         <p> Search: 
         <input type="text" id="searchProduct" name="searchProduct" size="75"> 
         <input type="submit" value="Search" name="submit" >
@@ -43,21 +43,8 @@ session_start();
 
         <?php
 
-        if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_REQUEST['searchProduct'])) {
-      
-          $connector = new Connector();
-     
-          $productname = $_GET["searchProduct"];
-          $_SESSION["searchProduct"] = $productname;
-          //$_SESSION["products"] = $connector->savesearchForProduct($productname);
-          $_SESSION["products"] = $connector->searchForProduct($productname);
-        }
-          
-
-
             if(isset($_SESSION["searchProduct"])){
             if($_SESSION["searchProduct"] != NULL){
-
             $products = $_SESSION["products"];
 
             if($products != NULL) {
@@ -76,7 +63,7 @@ session_start();
                         echo "<td>" . $products[$i]["Price"]. "</td>";
                     if(array_key_exists("Quantity",$products[$i]))
                         echo "<td>" . $products[$i]["Quantity"]. "</td>";
-                    echo "</tr>";
+                        echo "</tr>";
                 }
             echo "</table>" ;
             } else echo "Product not found";
@@ -85,6 +72,16 @@ session_start();
             }
        ?>
 
+        <br><br><br>
+        <form method = "post" action= "/samShop.php">
+        <p> Add Product:
+        <br> <br>
+        <label for= "productName"> Name: </label>
+        <input type="text" id="productName" name="productName" >
+        <label for= "productprice"> Price: </label>
+        <input type="text" id="productPrice" name="productPrice">
+        <input type="submit" value="Add Item" name="addItem" >
+    </form>
        
     </body>
 </html>

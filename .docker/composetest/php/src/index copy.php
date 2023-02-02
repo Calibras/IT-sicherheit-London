@@ -61,7 +61,7 @@ $result = $connector->search($id);
 if($name != NULL){
   foreach ($result as $user) {
       echo "<br>";
-      echo "Your Message is: " . $user->Msg;
+      echo "Your Message is: " . $user["Msg"];
       echo "<br>";
   }
   }

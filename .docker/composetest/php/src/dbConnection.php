@@ -89,7 +89,30 @@
             }
         }
 
+        /**
+         * prepared statement
+         */
+        function saveSearchForProduct($productname){
+            $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
+            $sql = 'SELECT Product_name, Price, Quantity FROM products WHERE product_name LIKE ?';
+            //$sql = 'SELECT Product_name, Price, Quantity FROM products WHERE product_name = ?';
 
+         
+            $stmt = $conn->prepare($sql); 
+            $input = "%$productname%";
+            $stmt->bind_param("s", $input);
+            $stmt->execute();
+         
+            $return[] = [];
+            $result = $stmt->get_result();
+            while($data = $result->fetch_assoc()){
+                $return[] = $data;
+            }
+            
+            
+            return $return;
+            
+        }
 
         /**
          * neues Product einfügen
@@ -99,8 +122,12 @@
             $sql = 'INSERT INTO products(Product_name, Price) VALUES("' . $productname . '",' .$productprice.')';
             $conn->query($sql);    
         } 
-
+        
         function saveAddItem($productname, $productprice) {
+            if ($conn->connect_error) {
+                print("Es folgt fehler meldung vom connector : ");
+                die("Connection failed: " . $conn->connect_error);
+            }
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
             $sql = 'INSERT INTO products(Product_name, Price) VALUES(?,?)';
             $stmt = $conn->prepare($sql); 
@@ -109,17 +136,6 @@
         }
 
 
-        function saveAddItem($productname, $productprice) {
-
-            if ($conn->connect_error) {
-                print("Es folgt fehler meldung vom connector : ");
-                die("Connection failed: " . $conn->connect_error);
-            }
-            $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
-            $sql = 'INSERT INTO products(Product_name, Price) VALUES("' . $productname . '",' .$productprice.')';
-            $conn->query($sql);    
-        } 
-        }
 
         function bulshit($string){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
@@ -165,6 +181,10 @@
             
         }
 
+
+
+
+        
         /** 
          * Sichereheit durch prepared statment 
         */
