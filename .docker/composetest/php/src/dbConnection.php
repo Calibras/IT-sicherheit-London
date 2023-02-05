@@ -46,6 +46,10 @@
             }
         }
 
+        /**
+         * Prepared Statement
+         */
+
         function saveSearchForProduct($productname){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
             $sql = 'SELECT Product_name, Price, Quantity FROM products WHERE product_name LIKE ?';
@@ -87,31 +91,6 @@
                array_shift($products);
                return $products;
             }
-        }
-
-        /**
-         * prepared statement
-         */
-        function saveSearchForProduct($productname){
-            $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
-            $sql = 'SELECT Product_name, Price, Quantity FROM products WHERE product_name LIKE ?';
-            //$sql = 'SELECT Product_name, Price, Quantity FROM products WHERE product_name = ?';
-
-         
-            $stmt = $conn->prepare($sql); 
-            $input = "%$productname%";
-            $stmt->bind_param("s", $input);
-            $stmt->execute();
-         
-            $return[] = [];
-            $result = $stmt->get_result();
-            while($data = $result->fetch_assoc()){
-                $return[] = $data;
-            }
-            
-            
-            return $return;
-            
         }
 
         /**
