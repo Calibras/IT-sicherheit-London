@@ -32,6 +32,7 @@ else{
 }}
     exit();
     //echo file_get_contents("Views/indexView.php");
-  }else {
+  }
+  else {
     header("location: Views/loginpageView.php");
   }
