@@ -12,7 +12,7 @@ session_start();
   </head>
 <body>
 
-  <form method="GET">
+  <form method="POST">
     <label for="id">ID:</label><br> 
     <input type="text" id="id" name="id" value="" size="75"><br>
     <input type="submit" name="submit" value="Submit">  
@@ -20,14 +20,14 @@ session_start();
   <h2>Your Massage:</h2>
 
   <?php
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-  $id = $_GET["id"];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $id = $_POST["id"];
   $connector = new Connector();
   
   $_SESSION["id"] = $id;
   $connector->search($id);
-  echo 'It worked';
-  /*
+  //echo 'It worked';
+  
   if(isset($_SESSION["id"])){
     if($_SESSION["id"] != NULL){
       $msg = $_SESSION["msg"];
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
           echo "<br>";
       }
     }
-  }*/
+  }
 }
 ?>
 

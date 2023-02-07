@@ -34,7 +34,7 @@
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
              // select query
              $sql = 'SELECT Product_name, Price, Quantity FROM products WHERE product_name LIKE "%' . $productname. '%"';
-             /*
+             
              if ($result = $conn->query($sql)) {
                 $products[] = [];
                 while ($data = $result->fetch_assoc()) {
@@ -42,7 +42,7 @@
                 }
                 array_shift($products);
                 return $products;
-            }*/
+            }
         }
     }
 ?>
