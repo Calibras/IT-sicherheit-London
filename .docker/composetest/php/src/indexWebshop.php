@@ -14,6 +14,7 @@
   }else{
     session_destroy();
     header("Location: Views/webshopView.php");
+    
     exit();
     //echo file_get_contents("Views/indexView.php");
   }
