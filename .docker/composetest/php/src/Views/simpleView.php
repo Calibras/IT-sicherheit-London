@@ -11,7 +11,7 @@ session_start();
   </head>
 <body>
 
-  <form method="post" action="../index.php">
+  <form method="post" action="../simple.php">
     <label for="id">ID:</label><br> 
     <input type="text" id="id" name="id" value=""><br>
     <input type="submit" name="submit" value="Submit">  
@@ -19,17 +19,19 @@ session_start();
   <h2>Your Massage:</h2>
 
   <?php
-  if(isset($_SESSION["id"])){
-    if($_SESSION["id"] != NULL){
-      $msg = $_SESSION["msg"];
-      for($i = 0; $i < count($msg); $i++){
-          echo "<br>";
-          echo "Your Message is: " . $msg[$i]["Msg"];
-          echo "<br>";
+    if(isset($_SESSION["id"])){
+      if($_SESSION["id"] != NULL){
+        $msg = $_SESSION["msg"];
+        for($i = 0; $i < count($msg); $i++){
+            echo "<br>";
+            echo "Your Message is: " . $msg[$i]["Msg"];
+            echo "<br>";
+        }
       }
     }
-  }
-?>
+  ?>
 
+<br><br><br><br>
+<p text-align: center> <a href= "../index.php" target="_blank">Webseite</a> </p>
 </body>
 </html>

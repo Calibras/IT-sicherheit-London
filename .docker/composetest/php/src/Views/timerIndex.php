@@ -11,7 +11,7 @@ session_start();
   </head>
 <body>
 
-  <form method="post" action="../timmer.php">
+  <form method="post" action="../timer.php">
     <label for="id">ID:</label><br> 
     <input type="text" id="id" name="id" value=""><br>
     <input type="submit" name="submit" value="Submit">  
@@ -27,5 +27,7 @@ session_start();
   }
 ?>
 
+<br><br><br><br>
+    <p text-align: center> <a href= "../index.php" target="_blank">Webseite</a> </p>
 </body>
 </html>

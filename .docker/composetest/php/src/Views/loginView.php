@@ -37,5 +37,8 @@ session_start();
    echo "Username or password incorrect";
    ?>
 
+   <br><br><br><br>
+    <p> <a href= "../index.php" target="_blank">Startseite</a> </p>
+
 </body>
 </html>

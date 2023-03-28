@@ -21,6 +21,9 @@ session_start();
             text-align: center;
         }
     </style>
+    <title>
+        SaveShop
+    </title>
 </head>
 
 
@@ -82,7 +85,7 @@ session_start();
         <input type="text" id="productPrice" name="productPrice">
         <input type="submit" value="Add Item" name="addItem" >
     </form>
-       
+    <br><br><br><br>
+    <p text-align: center> <a href= "../index.php" target="_blank">Webseite</a> </p>
     </body>
 </html>
-Footer
