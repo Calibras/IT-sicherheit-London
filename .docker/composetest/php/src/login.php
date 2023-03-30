@@ -21,8 +21,10 @@ if(empty(trim($_POST["password"]))){
 
 if(isset($username) && isset($password)){
      $connector = new Connector();
-          
-     if($connector->validateLogin($username, $password)){
+      
+     #der user der hund hollt die ID und passworst speichern
+     $username = $connector->validateLogin($username, $password);
+     if($username != "FAIL"){
         #positiv
         $_SESSION['username'] = $username;
        header("location: Views/samShopView.php");

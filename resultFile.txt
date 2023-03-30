@@ -1,5 +1,3 @@
-Das Inputfiled mit der id : searchProduct Auf der Website : http://localhost:8000/Views/samShopView.php hat eine sichereheits Luecke Fuer SQL injection! 
-Das Inputfiled mit der id : id Auf der Website : http://localhost:8000/Views/timerIndex.php hat eine sichereheits Luecke Fuer SQL injection! 
-Das Inputfiled mit der id : id Auf der Website : http://localhost:8000/Views/timerIndex.php hat eine sichereheits Luecke Fuer SQL injection! 
-datenBankName: MY_DATABASE, sqlVariante : False, tabellenName: products,user_info,user_login,user_msg
+Das Inputfiled mit der id : searchProduct Auf der Website : http://localhost:8000/Views/webshopView.php hat eine sichereheits Luecke Fuer SQL injection! 
+datenBankName: MY_DATABASE, sqlVariante : MARIA, tabellenName: user_info,user_login,products,user_msg
 Bitte beachte das dieser Bot nur bestimmte SQL injections abfragt, dass nicht finden bedeutet nicht das die websiten sicher sind

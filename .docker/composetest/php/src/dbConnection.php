@@ -12,8 +12,6 @@
 
         function search($id){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
-
-            
             if ($conn->connect_error) {
                 print("Es folgt fehler meldung vom connector : ");
                 die("Connection failed: " . $conn->connect_error);
@@ -21,7 +19,7 @@
             
 
              // select query
-             $sql = 'SELECT user_msg.Msg FROM user_msg WHERE User_ID = '. $id;
+             $sql = 'SELECT user_msg.Msg FROM user_msg WHERE Msg_ID = '. $id;
 
              #print($sql);
 
@@ -34,20 +32,6 @@
                 return $user_msg;
             }
             
-        }
-
-        function searchForProduct($productname){
-            $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
-             // select query
-             $sql = 'SELECT First_Name, Last_Name, DoB FROM user_info WHERE First_Name = "' . $productname. '";';
-             if ($result = $conn->query($sql)) {
-                $products[] = [];
-                while ($data = $result->fetch_assoc()) {
-                    $products[] = $data;
-                }
-                array_shift($products);
-                return $products;
-            }
         }
 
         function getUserNameWihtId($id){
@@ -152,15 +136,32 @@
             }
         }
 
+        function getUserInfoSave($userName){
+            $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
+            $sql = 'SELECT * FROM user_info WHERE user_info.First_Name = ?';
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("s", $userName);
+            $stmt->execute();
+
+            if ($result = $stmt->get_result()){
+                        $userInfo[] = [];
+                        while ($data = $result->fetch_assoc()) {
+                                $userInfo[] = $data;
+                        }
+                        array_shift($userInfo);
+                        return $userInfo;
+            }
+        }
+
+
         #Register
         function add_user($username, $userlastname, $password) {
             // Verbindung zur Datenbank herstellen
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
           
             // Query vorbereiten, um Benutzer in die Datenbank hinzuzufügen
-            $query = 'INSERT INTO user_info (First_name, Last_name, Passwort)
+            $query = 'INSERT INTO user_info (First_name, Last_name, password)
                       VALUES ("' . $username . '","' .$userlastname.'","' . $password .'")';
-          
             // Query ausführen
             if (mysqli_query($conn, $query)) {
               return true;
@@ -197,19 +198,24 @@
             return $return;
         }
 
-
+        //PREPARED!
         function validateLogin($userName, $password){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
-            $sql = "SELECT First_Name, password FROM user_info WHERE First_Name = '". $userName. "'";
-            #$sql = "SELECT Username, User_Pass FROM user_login WHERE Username = '". $userName. "'";
-            if ($result = $conn->query($sql)) {
-                 $pass = $result->fetch_assoc();
+
+            $stmt = $conn->prepare("SELECT * From user_info WHERE First_Name = ? AND password = ?");
+            $stmt->bind_param("ss", $userName, $password);
+            $stmt->execute();
+
+            if ($result = $stmt->get_result()) {
+                $data = $result->fetch_assoc();
+                if (isset($data)){
+                    return $data["First_Name"];
+                }
             }
-            if($pass != NULL){
-                if ($pass["password"] == $password) return TRUE;}
-            return FALSE;
-            
+            return "FAIL";
         }
+
+
         #saveSamShop(SSS)
         function saveAddItem($productname, $productprice) {
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
@@ -223,11 +229,25 @@
             $stmt->bind_param("sd", $productname, $productprice);
             $stmt->execute();
         }
+
+        
+        function searchForProduct($productname){
+            $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
+             // select query
+             $sql = 'SELECT First_Name, Last_Name, DoB FROM user_info WHERE First_Name = "' . $productname. '";';
+             if ($result = $conn->query($sql)) {
+                $products[] = [];
+                while ($data = $result->fetch_assoc()) {
+                    $products[] = $data;
+                }
+                array_shift($products);
+                return $products;
+            }
+        }
+
         function saveSearchForProduct($productname){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
             $sql = 'SELECT Product_name, Price, Quantity FROM products WHERE product_name LIKE ?';
-            //$sql = 'SELECT Product_name, Price, Quantity FROM products WHERE product_name = ?';
-
          
             $stmt = $conn->prepare($sql); 
             $input = "%$productname%";

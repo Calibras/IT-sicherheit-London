@@ -30,14 +30,17 @@ session_start();
 
                         echo "<table BORDER =2>" ;
             echo "<tr>";
-                echo "<th>First Name </th> <th>Last Name</th> <th>Date of Birth</th>";
+                echo "<th>First Name </th> <th>Last Name</th> <th>Date of Birth</th> <th>password</th> <th>Address</th> <th>email</th> <th>phone</th>";
             echo "</tr>";
             
-    
             echo "<tr>";
             echo "<td>" . $user["First_Name"]. "</td>";
             echo "<td>" . $user["Last_Name"]. "</td>";
             echo "<td>" . $user["DoB"]. "</td>";
+            echo "<td>" . $user["password"]. "</td>";
+            echo "<td>" . $user["Address"]. "</td>";
+            echo "<td>" . $user["email"]. "</td>";
+            echo "<td>" . $user["phone"]. "</td>";
             echo "</tr>";
             echo "</table>" ;
       } else echo "Einlog daten falsch !";

