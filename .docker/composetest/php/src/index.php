@@ -48,7 +48,11 @@
         <tr>        
             <td> <a href = "/saveSamShop.php" target= "_blank">Sichere Seite </a></td>
             <td> Seite mit Parametrisierten Queries abgesichert</td>
-        </tr> 
+        </tr>
+        <tr>
+            <td> <a href= "/userInfo.php" target="_blank">User Info</a> </td>
+            <td> Zeigt userInfo an, fals eingelogt </td>
+        </tr>
         <tr>            
 
     </table>

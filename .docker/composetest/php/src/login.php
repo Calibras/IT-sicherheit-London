@@ -21,21 +21,18 @@ if(empty(trim($_POST["password"]))){
 
 if(isset($username) && isset($password)){
      $connector = new Connector();
-      
-     #der user der hund hollt die ID und passworst speichern
+
      $username = $connector->validateLogin($username, $password);
      if($username != "FAIL"){
-        #positiv
         $_SESSION['username'] = $username;
-       header("location: Views/samShopView.php");
+       //header("Location: Views/userInfoView.php");
+       header("Location: userInfo.php");
         } 
 else{
     $_SESSION["loginError"] = TRUE;
-    #Falsche eingabe
     header("location: Views/loginView.php");
 }}
     exit();
-    //echo file_get_contents("Views/indexView.php");
   }
   else {
     header("location: Views/loginView.php");

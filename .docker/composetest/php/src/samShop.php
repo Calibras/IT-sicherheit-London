@@ -13,7 +13,6 @@
     else {
      $productname = $_POST["searchProduct"];
      $_SESSION["searchProduct"] = $productname;
-     //$_SESSION["msg"] = $connector->search($id);
      $_SESSION["products"] = $connector->samSearchForProduct($productname);
     }
     
@@ -23,5 +22,4 @@
     
     header("Location: Views/samShopView.php");
     exit();
-    //echo file_get_contents("Views/indexView.php");
   }

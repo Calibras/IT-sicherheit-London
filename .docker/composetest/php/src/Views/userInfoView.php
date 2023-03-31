@@ -16,13 +16,6 @@ session_start();
         <h2>User info</h2>
 
         <?php
-
-/*
-            $user = [];
-            $user["First_Name"] = "FUCK";
-            $user["Last_Name"] = "My";
-            $user["DoB"] = "Life";
-            */
             $user = $_SESSION["user"];
             
 
@@ -48,4 +41,5 @@ session_start();
        ?>
        
     </body>
+    <p text-align: center> <a href= "../index.php" target="_blank">Webseite</a> </p>
 </html>

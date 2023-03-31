@@ -8,21 +8,14 @@
         static $pass =       "Darius1998";
         static $mydatabase = "MY_DATABASE";
 
-        const SAFE = false;
-
         function search($id){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
             if ($conn->connect_error) {
                 print("Es folgt fehler meldung vom connector : ");
                 die("Connection failed: " . $conn->connect_error);
-            } 
-            
-
+            }
              // select query
              $sql = 'SELECT user_msg.Msg FROM user_msg WHERE Msg_ID = '. $id;
-
-             #print($sql);
-
              if ($result = $conn->query($sql)) {
                 $user_msg[] = [];
                 while ($data = $result->fetch_assoc()) {
@@ -104,11 +97,13 @@
             $conn->query($sql);    
         } 
 
+/*
         function bulshit($string){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
             $sql = "SELECT * FROM user_msg WHERE user_msg.Msg_ID = ". $string. ";"; #1 AND SLEEP(5)=0;
             $conn->query($sql);
         }
+*/
 
 
         function getUserNameFromId($id){
@@ -118,8 +113,6 @@
             $stmt->bind_param("i", $id);
             $stmt->execute();
             $result = $stmt->get_result()->fetch_assoc();
-            //Das packen ins array ist dammit, falls mehree Elemente zurückkommen alles klappt
-
             return $result["Username"];
         }
 
@@ -191,7 +184,6 @@
             $stmt->bind_param("i", $id);
             $stmt->execute();
             $result = $stmt->get_result()->fetch_assoc();
-            //Das packen ins array ist dammit, falls mehree Elemente zurückkommen alles klappt
             $return = [];
             $return[] = $result;
 
@@ -259,8 +251,6 @@
             while($data = $result->fetch_assoc()){
                 $return[] = $data;
             }
-            
-            
             return $return;
             
         }
