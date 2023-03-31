@@ -46,8 +46,6 @@
             }
         }
 
-
-        #stuff for fancy button
         function updateQuantity($quantity, $name){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
              // select query
@@ -181,7 +179,6 @@
             return $return;
         }
 
-        //PREPARED!
         function validateLogin($userName, $password){
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
 
@@ -199,7 +196,6 @@
         }
 
 
-        #saveSamShop(SSS)
         function saveAddItem($productname, $productprice) {
             $conn = new mysqli(Connector::$host, Connector::$user, Connector::$pass, Connector::$mydatabase);
             if ($conn->connect_error) {

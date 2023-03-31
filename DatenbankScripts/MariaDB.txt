@@ -1,42 +1,16 @@
--- phpMyAdmin SQL Dump
--- version 5.2.0
--- https://www.phpmyadmin.net/
---
--- Host: mariadb
--- Erstellungszeit: 02. Feb 2023 um 18:31
--- Server-Version: 10.10.2-MariaDB-1:10.10.2+maria~ubu2204
--- PHP-Version: 8.0.19
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Datenbank: `MY_DATABASE`
---
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `products`
---
 
 CREATE TABLE `products` (
   `Product_ID` int(11) NOT NULL,
   `Product_name` varchar(100) DEFAULT NULL,
   `Price` decimal(5,2) DEFAULT NULL,
   `Quantity` int(11) DEFAULT 10
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
---
--- Daten für Tabelle `products`
---
 
 INSERT INTO `products` (`Product_ID`, `Product_name`, `Price`, `Quantity`) VALUES
 (1, 'Klauenhammer', '19.99', 10),
@@ -51,11 +25,6 @@ INSERT INTO `products` (`Product_ID`, `Product_name`, `Price`, `Quantity`) VALUE
 (10, 'rote Farbe', '5.00', 10),
 (11, 'blaue Farbe', NULL, 10);
 
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `user_info`
---
 
 CREATE TABLE `user_info` (
   `User_ID` int(11) NOT NULL,
@@ -64,29 +33,33 @@ CREATE TABLE `user_info` (
   `Address` varchar(50) DEFAULT NULL,
   `DoB` date DEFAULT NULL,
   `email` varchar(50) DEFAULT NULL,
-  `phone` varchar(15) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `phone` varchar(15) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL
+);
 
---
--- Daten für Tabelle `user_info`
---
 
-INSERT INTO `user_info` (`User_ID`, `First_Name`, `Last_Name`, `Address`, `DoB`, `email`, `phone`) VALUES
-(1, 'Franz', 'Kafka', 'Kaiserstrae 5, Regensberg', '1981-01-01', 'franz@kafka.de', '1235465522'),
-(2, 'Peter', 'Ford', 'Zuckerweg 52, Halle', '1955-05-28', 'peterQford.de', '159852648'),
-(3, 'George', 'Affe', 'Waldstrasse 80, Freiberg', '1990-06-27', 'geroge@affe.de', '142536789'),
-(4, 'Kathrine', 'Piere', 'Pariserweg 356, Freiberg', '1995-12-29', 'kat@piere.de', '147852369'),
-(5, 'Monica', 'Lalala', 'Bodenweg 55, Halle', '1989-07-19', 'mon@lala.com', '112255886'),
-(6, 'Daniel', 'Kaiser', 'Hafenbucht 88, Hamburg', '1998-10-31', 'daniel@kaiser.com', '149875632'),
-(7, 'Tina', 'Ferra', 'Redroad 212, Kalle', '1994-08-22', 'tina@ferra.com', '456789321'),
-(8, 'Jennifer', 'Sterling', '18 Oxfors street, London', '1984-11-12', 'jen@sterling.com', '45659821'),
-(9, 'Boot', 'Star', 'pariser strasse 77', '1970-03-14', 'b@star.de', '457395318'),
-(10, 'Sahra', 'Ferradia', 'Kornstrasse 99, Hanover', '2000-02-15', 'sarah@ferr.de', '546458285'),
-(11, 'Rachel', 'Green', 'Maisweg 587, Berlin', '1988-04-20', 'rachel@green.com', '753951456'),
-(12, 'Violet', 'Purple', '797 Bridge Road, London', '1973-06-14', 'violet14@purple.com', '741987852'),
-(13, 'Maya', 'Herrmann', 'Hanover Landstrasse 123, Frankfurt', '1999-05-29', 'Maya99@herrmann.de', '456852123'),
-(14, 'Chantal', 'Rosa', 'Pariserweg 12, Freiberg', '1993-01-30', 'chan@rosa.de', '658249175'),
-(15, 'Laura', 'Turm', 'Maisweg 35, Berlin', '2000-12-03', 'laura2000@turm.de', '45712369');
+
+INSERT INTO `user_info` (`User_ID`, `First_Name`, `Last_Name`, `Address`, `DoB`, `email`, `phone`, `password`) VALUES
+(1, 'Franz', 'Kafka', 'Kaiserstrae 5, Regensberg', '1981-01-01', 'franz@kafka.de', '1235465522', '123'),
+(2, 'Franz\'#', 'Ford', 'Zuckerweg 52, Halle', '1955-05-28', 'peterQford.de', '159852648', '1234'),
+(3, 'George', 'Affe', 'Waldstrasse 80, Freiberg', '1990-06-27', 'geroge@affe.de', '142536789', 'Haldskj'),
+(4, 'Kathrine', 'Piere', 'Pariserweg 356, Freiberg', '1995-12-29', 'kat@piere.de', '147852369', 'afbjka'),
+(5, 'Monica', 'Lalala', 'Bodenweg 55, Halle', '1989-07-19', 'mon@lala.com', '112255886', 'qoieur'),
+(6, 'Daniel', 'Kaiser', 'Hafenbucht 88, Hamburg', '1998-10-31', 'daniel@kaiser.com', '149875632', 'lqwkefjr13'),
+(7, 'Tina', 'Ferra', 'Redroad 212, Kalle', '1994-08-22', 'tina@ferra.com', '456789321', 'alkdsfji3287'),
+(8, 'Jennifer', 'Sterling', '18 Oxfors street, London', '1984-11-12', 'jen@sterling.com', '45659821', 'akdjfsj3'),
+(9, 'Boot', 'Star', 'pariser strasse 77', '1970-03-14', 'b@star.de', '457395318', 'alkdsjf4'),
+(10, 'Sahra', 'Ferradia', 'Kornstrasse 99, Hanover', '2000-02-15', 'sarah@ferr.de', '546458285', ',amdsnf4'),
+(11, 'Rachel', 'Green', 'Maisweg 587, Berlin', '1988-04-20', 'rachel@green.com', '753951456', 'kqej8'),
+(12, 'Violet', 'Purple', '797 Bridge Road, London', '1973-06-14', 'violet14@purple.com', '741987852', 'adfh32'),
+(13, 'Maya', 'Herrmann', 'Hanover Landstrasse 123, Frankfurt', '1999-05-29', 'Maya99@herrmann.de', '456852123', 'adsfn23'),
+(14, 'Chantal', 'Rosa', 'Pariserweg 12, Freiberg', '1993-01-30', 'chan@rosa.de', '658249175', 'öqwelk78'),
+(15, 'Laura', 'Turm', 'Maisweg 35, Berlin', '2000-12-03', 'laura2000@turm.de', '45712369', 'adfn23'),
+(16, 'Darius', 'Seeger', NULL, NULL, NULL, NULL, 'a,mdsnf'),
+(17, 'Darius', 'Seeger', 'Hier', '1998-03-12', 'seegerdarius@yahoo.de', '91287638', 'Passwort'),
+(18, 'Darius', 'Seeger', 'Here', NULL, 'meine@email.de', '9384172', '1234'),
+(19, 'kajsd', 'ajkjfdsag', 'adsf', NULL, 'asdf', 'aadsfkj', 'asdfnafdm'),
+(20, 'asdf', 'asdf', 'asdfga', NULL, 'asdf@yahoo.de', '238746', 'alskdjf');
 
 -- --------------------------------------------------------
 
@@ -98,7 +71,7 @@ CREATE TABLE `user_login` (
   `User_ID` int(11) NOT NULL,
   `Username` varchar(20) NOT NULL,
   `User_Pass` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Daten für Tabelle `user_login`
@@ -131,7 +104,7 @@ CREATE TABLE `user_msg` (
   `Msg_ID` int(11) DEFAULT NULL,
   `User_ID` int(11) DEFAULT NULL,
   `Msg` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Daten für Tabelle `user_msg`
